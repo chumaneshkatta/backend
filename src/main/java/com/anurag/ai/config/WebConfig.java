@@ -9,22 +9,34 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
+
     private final AuthInterceptor auth;
     private final String[] origins;
 
-    public WebConfig(AuthInterceptor auth, @Value("${app.cors.origins}") String[] origins) {
+    public WebConfig(
+            AuthInterceptor auth,
+            @Value("${app.cors.origins}") String[] origins) {
         this.auth = auth;
         this.origins = origins;
     }
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(auth).addPathPatterns("/api/**");
+        registry.addInterceptor(auth)
+                .addPathPatterns("/api/**");
     }
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/api/**").allowedOriginPatterns(origins)
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS").allowedHeaders("*");
+        registry.addMapping("/api/**")
+                .allowedOriginPatterns(origins)
+                .allowedMethods(
+                        "GET",
+                        "POST",
+                        "PUT",
+                        "DELETE",
+                        "OPTIONS"
+                )
+                .allowedHeaders("*");
     }
 }
